@@ -106,18 +106,19 @@
                     </li>
                 @else
                     <li class="nav-item">
-                        <span class="nav-link">{{ auth()->user()->first_name }}</span>
+                        <span class="nav-link">Name:{{ auth()->user()->first_name }}</span>
                     </li>
                     @if(isset(auth()->user()->roles()->first()->name))
                         <li class="nav-item">
-                            <span class="nav-link">{{ auth()->user()->roles()->first()->name }}</span>
+                            <span class="nav-link">Role: {{ auth()->user()->roles()->first()->name }}</span>
                         </li>
                     @endif
                     @if(isset(auth()->user()->userFiles()->first()->name))
                         <li class="nav-item">
                             <div class="profile-image-container">
                                 <img
-                                    src="{{ asset('uploads/profile_picture/'. auth()->user()->userFiles()->first()->name) }}"
+                                    {{--src="{{ asset('uploads/profile_picture/'. auth()->user()->userFiles()->first()->name) }}"--}}
+                                    src="{{ auth()->user()->userFiles()->first()->name }}"
                                     alt="Profile Picture"
                                     class="profile-image"
                                     style="height: auto; width: auto; max-width: 40px; max-height: 40px;">

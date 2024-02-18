@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePermissionRequest;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -99,13 +101,9 @@ class PermissionController extends Controller
     }
 
     // Store a new permission
-    public function store(Request $request)
+    public function store(StorePermissionRequest $request)
     {
         try {
-            $this->validate($request, [
-                'name' => 'required|unique:permissions,name',
-            ]);
-
             $permissionData = [
                 'name' => $request->input('name'),
                 'guard_name' => $request->input('guard_name', 'web'),
@@ -113,6 +111,12 @@ class PermissionController extends Controller
 
             Permission::create($permissionData);
             return response()->json(['status' => 200, 'message' => 'Permission created successfully.']);
+//        } catch (ValidationException $e) {
+//            // Handle validation errors
+//            return response()->json([
+//                'code' => 422,
+//                'errors' => $e->errors(),
+//            ], 200);
         } catch (Exception $e) {
             Log::error("PermissionController.php : store() : Exception", ["Exception" => $e->getMessage(), "\nTraceAsString" => $e->getTraceAsString()]);
             return response()->json(['status' => 201, 'message' => 'Something went wrong.']);

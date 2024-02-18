@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSupplierRequest;
 use App\Models\Customer;
 use App\Models\Supplier;
 use Exception;
@@ -64,23 +65,8 @@ class SupplierController extends Controller
 
     }
 
-    public function store(Request $request)
+    public function store(StoreSupplierRequest $request)
     {
-        $messages = [
-            'name.required' => 'The name field is required.',
-            'status.required' => 'The status field is required.',
-            'status.in' => 'The status field must be either 0 or 1.',
-        ];
-
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'status' => 'required|in:0,1',
-        ], $messages);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()->first()], 422);
-        }
-
         $customer = new Supplier();
         $customer->name = $request->name;
         $customer->status = $request->status;

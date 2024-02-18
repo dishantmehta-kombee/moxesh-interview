@@ -10,4 +10,9 @@ class UserFile extends Model
     use HasFactory;
 
     protected $fillable = ['user_id', 'name'];
+
+    public function getNameAttribute($value)
+    {
+        return asset('uploads/profile_picture/'. $value);
+    }
 }
