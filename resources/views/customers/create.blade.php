@@ -92,7 +92,7 @@
                 },
                 messages: {
                     name: {
-                        required: "Please enter a permission name"
+                        required: "Please enter a customer name"
                     },
                     status: {
                         required: "Status is required"

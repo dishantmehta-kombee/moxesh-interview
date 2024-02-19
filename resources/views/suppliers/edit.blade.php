@@ -16,7 +16,7 @@
                     </div>
 
                     <div class="card-body">
-                        <form id="create-customer-form" method="POST"
+                        <form id="edit-supplier-form" method="POST"
                               action="{{ route('suppliers.update', ['id' => $customer->id]) }}">
                             @csrf
 
@@ -27,7 +27,7 @@
                                     <input id="name" type="text"
                                            class="form-control @error('name') is-invalid @enderror" name="name"
                                            value="{{ $customer->name }}" required autofocus>
-
+                                    <span id="name_error" class="text-danger"></span>
                                     @error('name')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -54,7 +54,7 @@
                                             Inactive
                                         </label>
                                     </div>
-
+                                    <span id="status_error" class="text-danger"></span>
                                     @error('status')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -65,7 +65,7 @@
 
                             <div class="form-group row mb-0">
                                 <div class="col-md-6 offset-md-4">
-                                    <button type="button" class="btn btn-primary" id="submit-btn">
+                                    <button type="submit" class="btn btn-primary" id="submit-btn">
                                         Submit
                                     </button>
                                 </div>
@@ -81,30 +81,51 @@
 @push('scripts')
     <script>
         $(document).ready(function () {
-            $('#submit-btn').on('click', function () {
-                console.log('fd')
-                var formData = $('#create-customer-form').serialize();
-                $.ajax({
-                    url: $('#create-customer-form').attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    success: function (response) {
-                        // Display success message
-                        $('#success-message').removeClass('d-none').html(response.message);
-                        // Clear form fields
-                        $('#create-customer-form')[0].reset();
-                        // Hide error message if displayed
-                        $('#error-message').addClass('d-none');
-                        location.href = '{{route('suppliers.index')}}';
+            $('#edit-supplier-form').validate({
+                rules: {
+                    name: {
+                        required: true
                     },
-                    error: function (xhr) {
-                        console.log(xhr);
-                        // Display error message
-                        $('#error-message').removeClass('d-none').html(xhr.responseJSON.errors);
-                        // Hide success message if displayed
-                        $('#success-message').addClass('d-none');
-                    }
-                });
+                    status: {
+                        required: true
+                    },
+                },
+                messages: {
+                    name: {
+                        required: "Please enter a permission name"
+                    },
+                    status: {
+                        required: "Status is required"
+                    },
+                },
+                errorPlacement: function (error, element) {
+                    // error.insertAfter($("#" + element.attr("name") + "_error"));
+                    $("#" + element.attr("name") + "_error").html(error);
+                },
+                submitHandler: function (form) {
+                    let formData = $(form).serialize();
+                    $.ajax({
+                        url: $(form).attr('action'),
+                        type: 'POST',
+                        data: formData,
+                        success: function (response) {
+                            // Display success message
+                            $('#success-message').removeClass('d-none').html(response.message);
+                            // Clear form fields
+                            $(form)[0].reset();
+                            // Hide error message if displayed
+                            $('#error-message').addClass('d-none');
+                            location.href = '{{route('suppliers.index')}}';
+                        },
+                        error: function (xhr) {
+                            console.log(xhr);
+                            // Display error message
+                            $('#error-message').removeClass('d-none').html(xhr.responseJSON.errors);
+                            // Hide success message if displayed
+                            $('#success-message').addClass('d-none');
+                        }
+                    });
+                }
             });
         });
     </script>
