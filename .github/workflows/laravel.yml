@@ -33,3 +33,12 @@ jobs:
         DB_CONNECTION: sqlite
         DB_DATABASE: database/database.sqlite
       run: php artisan test
+      
+    - name: Run PHPStan
+      run: phpstan analyse src --level=max
+
+    - name: Run PHPCS
+      run: vendor/bin/phpcs --standard=PSR12 src/
+
+    - name: Run Security Check
+      run: composer audit
